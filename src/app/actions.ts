@@ -5,6 +5,13 @@ export type IbanMessage = {
   status: string;
 };
 
+export type BankData = {  
+  valid: boolean;
+  bankData: {
+    name: string;
+  };
+};
+
 export async function fetchBankNameFromIban(
   _prevState: IbanMessage,
   formData: FormData
@@ -21,9 +28,17 @@ export async function fetchBankNameFromIban(
     if (!response.ok) {
       return handleErrorResponse(response);
     }
-    const data = await response.json();
+    const data = await response.json() as BankData;
     console.log(data);
-    return { message: `Bank name: ${data.bankData.name}`, status: "SUCCESS" };
+
+    if(data.valid) {
+      return { message: `Bank name: ${data.bankData.name}`, status: "SUCCESS" };
+    }
+    return {
+      message: `IBAN failed validation. Please check and submit again.`,
+      status: "VALIDATION_FAILED",
+    };
+    
   } catch (e) {
     console.log(e);
     return { message: `Could not reach backend`, status: "ERROR" };
