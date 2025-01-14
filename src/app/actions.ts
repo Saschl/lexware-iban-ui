@@ -1,10 +1,12 @@
 "use server";
 
+export type IbanMessage = {
+  message: string;
+  status: string;
+};
+
 export async function fetchBankNameFromIban(
-  _prevState: {
-    message: string;
-    status: string;
-  },
+  _prevState: IbanMessage,
   formData: FormData
 ) {
   const iban = formData.get("iban") as string;
@@ -17,7 +19,7 @@ export async function fetchBankNameFromIban(
       `${process.env.API_URL}/bank?iban=${sanitizedIban}`
     );
     if (!response.ok) {
-      handleErrorResponse(response);
+      return handleErrorResponse(response);
     }
     const data = await response.json();
     console.log(data);
@@ -28,7 +30,7 @@ export async function fetchBankNameFromIban(
   }
 }
 
-function handleErrorResponse(response: Response) {
+function handleErrorResponse(response: Response): IbanMessage {
   if (response.status.toString().startsWith("5")) {
     return {
       message: `There was an issue with the server. Please try again later.`,

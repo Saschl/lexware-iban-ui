@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { fetchBankNameFromIban } from "./actions";
+import { fetchBankNameFromIban, IbanMessage } from "./actions";
 
 function IbanForm() {
   const { pending } = useFormStatus();
@@ -29,7 +29,7 @@ function IbanForm() {
   );
 }
 
-const initialState = {
+const initialState: IbanMessage = {
   message: "",
   status: "",
 };
