@@ -4,7 +4,11 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { fetchBankNameFromIban, IbanMessage } from "./actions";
 
-function IbanForm() {
+type IbanFormPropTypes = {
+  state: IbanMessage;
+};
+
+function IbanForm(props: IbanFormPropTypes) {
   const { pending } = useFormStatus();
 
   return (
@@ -12,6 +16,7 @@ function IbanForm() {
       <input
         type="text"
         id="iban"
+        defaultValue={props.state.payload?.iban}
         name="iban"
         required
         placeholder="Enter IBAN"
@@ -32,6 +37,9 @@ function IbanForm() {
 const initialState: IbanMessage = {
   message: "",
   status: "",
+  payload: {
+    iban: ""
+  }
 };
 
 export default function Home() {
@@ -48,7 +56,7 @@ export default function Home() {
             action={formAction}
             className="flex gap-2 items-center flex-col sm:flex-row"
           >
-            <IbanForm />
+            <IbanForm state={state} />
           </form>
         </div>
         {state?.status === "SUCCESS" && (
